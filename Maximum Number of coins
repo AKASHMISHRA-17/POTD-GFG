@@ -1,0 +1,50 @@
+We have been given N balloons, each with a number of coins associated with it. On bursting a balloon i, the number of coins gained is equal to A[i-1]*A[i]*A[i+1].
+Also, balloons i-1 and i+1 now become adjacent. Find the maximum possible profit earned after bursting all the balloons. Assume an extra 1 at each boundary.
+Input: 
+N=2
+a[]={5, 10}
+Output: 
+60
+Explanation: First Burst 5, Coins = 1*5*10
+              Then burst 10, Coins+= 1*10*1
+              Total = 60
+Example 2:
+
+Input:
+N=4
+a[] = {3,1,5,8}
+Output:
+167
+Explanation:
+nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []
+coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167.
+
+class Solution{
+    public:
+    vector<vector<int>>dp;
+    int solve(vector<int>&a, int i, int j)
+    {
+        if(i>j)return 0;
+        
+        if(dp[i][j]!=-1)return dp[i][j];
+        
+        int mx=INT_MIN;
+        for(int index=i; index<=j; index++)
+        {
+            int cost=a[i-1]*a[index]*a[j+1]+solve(a,i,index-1)+solve(a,index+1,j);
+            mx=max(mx,cost);
+            
+        }
+        
+        return dp[i][j]= mx;
+    }
+        int maxCoins(int N, vector <int> &a)
+        {
+                // write your code here
+                dp=vector<vector<int>>(N+2,vector<int>(N+2,-1));
+                a.push_back(1);
+                a.insert(a.begin(),1);
+                return solve(a,1,N);
+                
+        }
+};
